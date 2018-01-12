@@ -1,9 +1,13 @@
 import numpy as np
 
 def complexity(xdata, ydata):
+    print("######### start complexity measurement ###############")
+    print("xdata: \n",xdata)
+    print("ydata", ydata)
+
     #error checking
-    nrowsx = xdata.size
-    nrowsy = ydata.size
+    nrowsx = xdata.shape[0]
+    nrowsy = ydata.shape[0]
     if nrowsx != nrowsy:
         raise ValueError("COMPLEXITY: The number of rows must be the same in both matrices.")
     else:
@@ -12,6 +16,7 @@ def complexity(xdata, ydata):
 
     # number of dimensions of input data:
     ndims = xdata.shape[1]
+    #print("ndims", ndims)
     # number of points in each dimension:
     npoints = nrowsx
 
@@ -19,27 +24,31 @@ def complexity(xdata, ydata):
     complexityvalues = np.zeros(ndims)
 
     # sort the x values on each dimension (by ascending order):
-    print(xdata)
-    sortedxdata, index = xdata.argsort(axis=0)
+    index = xdata[:, 0].argsort()
+    sortedxdata = xdata[index]
+
+    #print("sortedxdata: ", sortedxdata)
+    #print("index: ",  index)
     # sort the y values (using the ndims different orders):
     ydata = np.kron(np.ones((1, ndims)), ydata)
-    print(index)
-    print(ydata)
     sortedydata = ydata[index]
+    print("sortedydata", sortedydata)
 
     # calculate complexity values for each dimension separately:
-    for d in range(0, ndims-1):
+    for d in range(0, ndims):
         # because the same x value may have different y values (when ndims>1)
         # we use the median of the y values. to do this:
 
         # find the indexes with repeated x values:
         x = sortedxdata[:, d]
-        ux, i = np.unique(x)  # i returns the indexes of the unique values
-        ri = np.setdiff1d(range(0, npoints-1), i)  # ri returns the indexes of the repetitions
-        # (when there is a repeated value, i contains the index of the *last*
+        print("checking dimension ",d, "with data ",x)
+        ux, i = np.unique(x, return_index=True)  # i returns the indexes of the unique values
+        print("ux ", ux, "i ", i)
+        ri = np.setdiff1d(range(0, npoints), i)  # ri returns the indexes of the repetitions
+        # (when there is a repeated value, i contains the index of the *first*
         #  occurrence of the value, while ri contains the indexes of the n
         #  first occurrences of the value (n>=1)
-
+        print("ri", ri)
         if ri:  # if there are no repetitions skip this entire part
 
             # count occurrences, to help identify the "groups" of repetitions:
@@ -54,7 +63,7 @@ def complexity(xdata, ydata):
 
             # build final y vector with medians where necessary:
             y = sortedydata[:, d]
-            yfinal = []
+            yfinal = np.zeros(len(y))
             endlastrep = 0  # index on the y vector, end of last repetition
             endthisrep = 0
             for i in range(0, len(c)-1):
@@ -80,29 +89,85 @@ def complexity(xdata, ydata):
         # if ~isempty(ri)
 
         # finally, calculate slopes using xfinal and yfinal:
-        xfinal1 = xfinal[1:len(xfinal) - 1]
-        xfinal2 = xfinal[2:len(xfinal)]
-        yfinal1 = yfinal[1:len(xfinal) - 1]
-        yfinal2 = yfinal[2:len(xfinal)]
+        xfinal1 = xfinal[0:len(xfinal) - 1]
+        xfinal2 = xfinal[1:len(xfinal)]
+        yfinal1 = yfinal[0:len(yfinal) - 1]
+        yfinal2 = yfinal[1:len(yfinal)]
         xfinal0 = xfinal2 - xfinal1  # differences between consecutive x points
+        #print("xfinal0 ",xfinal0)
         yfinal0 = yfinal2 - yfinal1  # differences between consecutive y points
+        #print("yfinal0 ",yfinal0)
         slopes = yfinal0 / xfinal0
+        #print("slopes", slopes)
+
 
         # absolute differences between consecutive slopes:
-        slopes1 = slopes[1:len(slopes) - 1]
-        slopes2 = slopes[2:len(slopes)]
+        slopes1 = slopes[0:len(slopes) - 1]
+        slopes2 = slopes[1:len(slopes)]
         slopes0 = abs(slopes2 - slopes1)
+        #print("slopes0", slopes0)
 
         # complexity of this dimension is the sum of the differences:
         cvalue = sum(slopes0)
         complexityvalues[d] = cvalue
+        print("complexity in dimension", d, ": ", complexityvalues)
 
 
     # - Now we use whatever we want from this vector
     # - I suggest using (and comparing results with) average and maximum values
 
 
+# sum elements in vector!
 
-X_test = np.array([[0], [1]])
-y_test = np.array([1, 2])
+
+#X_test = np.array([
+#    [5],
+#    [2],
+#    [9],
+#    [0],
+#    [7],
+#    [7],
+#])
+#y_test = np.array([
+#    [1],
+#    [5],
+#    [7],
+#    [8],
+#    [4],
+#    [0],
+#     ])
+#complexityarray = complexity(X_test, y_test)
+
+X_test = np.array([
+[0],
+    [0],
+    [1],
+    [2],
+[2],
+])
+y_test = np.array([
+[0],
+    [0],
+    [1],
+    [0],
+[0]
+])
 complexityarray = complexity(X_test, y_test)
+
+
+
+# X_test = np.array([
+#     [0],
+#     [1],
+#     [2],
+# [3],
+# [4],
+# ])
+# y_test = np.array([
+#     [0],
+#     [1],
+#     [2],
+#     [1],
+#     [2],
+# ])
+# complexityarray = complexity(X_test, y_test)
