@@ -17,6 +17,8 @@ from sklearn.utils.random import sample_without_replacement
 from .functions import _Function
 from .utils import check_random_state
 
+from .complexity import complexity
+
 
 class _Program(object):
 
@@ -148,7 +150,7 @@ class _Program(object):
         self._n_samples = None
         self._max_samples = None
         self._indices_state = None
-
+        self.complexity_ = None
     def build_program(self, random_state):
         """Build a naive random program.
 
@@ -411,7 +413,7 @@ class _Program(object):
         """Get the indices used to measure the program's fitness."""
         return self.get_all_indices()[0]
 
-    def raw_fitness(self, X, y, sample_weight):
+    def raw_fitness(self, X, y, sample_weight, return_ypred = False):
         """Evaluate the raw fitness of the program according to X, y.
 
         Parameters
@@ -434,6 +436,8 @@ class _Program(object):
         """
         y_pred = self.execute(X)
         raw_fitness = self.metric(y, y_pred, sample_weight)
+        if return_ypred:
+            return raw_fitness, y_pred
 
         return raw_fitness
 
@@ -456,6 +460,9 @@ class _Program(object):
             parsimony_coefficient = self.parsimony_coefficient
         penalty = parsimony_coefficient * len(self.program) * self.metric.sign
         return self.raw_fitness_ - penalty
+
+    def calc_complexity(self, X, y_pred):
+        return sum(complexity(X, y_pred))
 
     def get_subtree(self, random_state, program=None):
         """Get a random subtree from the program.
@@ -632,3 +639,4 @@ class _Program(object):
     depth_ = property(_depth)
     length_ = property(_length)
     indices_ = property(_indices)
+    complexity_ = None

@@ -1,9 +1,9 @@
 import numpy as np
 
 def complexity(xdata, ydata):
-    print("######### start complexity measurement ###############")
-    print("xdata: \n",xdata)
-    print("ydata: \n", ydata)
+    #print("######### start complexity measurement ###############")
+    #print("xdata: \n",xdata)
+    #print("ydata: \n", ydata)
 
     #error checking
     nrowsx = xdata.shape[0]
@@ -63,7 +63,7 @@ def complexity(xdata, ydata):
                 #print("yfinal[",i,"]:", yfinal[i])
 
         else:
-            yfinal = sortedydata[:, 0]
+            yfinal = np.array(sortedydata)
 
         #print("yfinal", yfinal)
 
@@ -89,93 +89,13 @@ def complexity(xdata, ydata):
         # complexity of this dimension is the sum of the differences:
         cvalue = sum(slopes0)
         complexityvalues[d] = cvalue
-        print("complexity in dimension", d, ": ", complexityvalues[d])
+        #print("complexity in dimension", d, ": ", complexityvalues[d])
 
 
     # - Now we use whatever we want from this vector
     # - I suggest using (and comparing results with) average and maximum values
-
+    return complexityvalues
 
 # sum elements in vector!
 
 
-X_test = np.array([
-    [5],
-    [2],
-    [9],
-    [0],
-    [7],
-    [7],
-])
-y_test = np.array([
-    [1],
-    [5],
-    [7],
-    [8],
-    [4],
-    [0],
-     ])
-complexityarray = complexity(X_test, y_test)
-
-X_test = np.array([
-[0],
-    [0],
-    [1],
-    [2],
-[2],
-])
-y_test = np.array([
-[0],
-    [0],
-    [1],
-    [0],
-[0]
-])
-complexityarray = complexity(X_test, y_test)
-
-
-
-X_test = np.array([
-    [0],
-    [1],
-    [2],
-    [3],
-    [4],
- ])
-y_test = np.array([
-    [0],
-    [1],
-    [2],
-    [1],
-    [2],
- ])
-complexityarray = complexity(X_test, y_test)
-
-X_test = np.array([
-    [0, 0],
-    [1, 1],
-    [2, 2],
-    [3, 3],
-    [4, 4],
- ])
-y_test = np.array([
-    [0],
-    [1],
-    [2],
-    [1],
-    [2],
- ])
-complexityarray = complexity(X_test, y_test)
-
-
-X_test = np.array([
-    [0, 5, 9],
-    [1, 2, 1],
-    [2, 8, 0],
- ])
-y_test = np.array([
-    [0],
-    [1],
-    [2],
- ])
-complexityarray = complexity(X_test, y_test)

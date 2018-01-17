@@ -15,6 +15,7 @@ from time import time
 from warnings import warn
 
 import numpy as np
+import pydotplus
 from scipy.stats import rankdata
 from sklearn.base import BaseEstimator, RegressorMixin, TransformerMixin
 from sklearn.externals import six
@@ -48,6 +49,12 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
     p_point_replace = params['p_point_replace']
     max_samples = params['max_samples']
 
+    # modification
+    first_tournament = params['first_tournament']
+    second_tournament = params['second_tournament']
+    second_tournament_size = params['second_tournament_size']
+
+
     max_samples = int(max_samples * n_samples)
 
     def _tournament():
@@ -59,6 +66,48 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
         else:
             parent_index = contenders[np.argmin(fitness)]
         return parents[parent_index], parent_index
+
+    def _complexity_tournament():
+        """find the least complex individual from a sub-population"""
+        contenders = random_state.randint(0, len(parents), tournament_size)
+        complexity_p = [parents[p].complexity_ for p in contenders]
+        parent_index = contenders[np.argmin(complexity_p)]
+        return parents[parent_index], parent_index
+
+    def _double_tournament():
+
+        if first_tournament == "fitness" and second_tournament == None:
+            return _tournament()
+
+        elif first_tournament == "complexity" and second_tournament == None:
+            return _complexity_tournament()
+
+        elif first_tournament == "fitness" and second_tournament == "complexity":
+            contenders = [_tournament()[1] for _ in range(0, 2)]
+            complexity_p = [parents[p].complexity_ for p in contenders]
+            if random_state.random_sample() < second_tournament_size/2:
+                parent_index = contenders[np.argmin(complexity_p)]
+            else:
+                parent_index = contenders[np.argmax(complexity_p)]
+            return parents[parent_index], parent_index
+
+        elif first_tournament == "complexity" and second_tournament == "fitness":
+            contenders = [_complexity_tournament()[1] for _ in range(0, 2)]
+            fitness = [parents[p].fitness_ for p in contenders]
+            if random_state.random_sample() < second_tournament_size/2:
+                if metric.greater_is_better:
+                    parent_index = contenders[np.argmax(fitness)]
+                else:
+                    parent_index = contenders[np.argmin(fitness)]
+            else:
+                if metric.greater_is_better:
+                    parent_index = contenders[np.argmin(fitness)]
+                else:
+                    parent_index = contenders[np.argmax(fitness)]
+            return parents[parent_index], parent_index
+        else:
+            raise ValueError("DOUBLE TOURNAMENT: parameters not correct")
+
 
     # Build programs
     programs = []
@@ -72,11 +121,11 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
             genome = None
         else:
             method = random_state.uniform()
-            parent, parent_index = _tournament()
+            parent, parent_index = _double_tournament()
 
             if method < method_probs[0]:
                 # crossover
-                donor, donor_index = _tournament()
+                donor, donor_index = _double_tournament()
                 program, removed, remains = parent.crossover(donor.program,
                                                              random_state)
                 genome = {'method': 'Crossover',
@@ -137,7 +186,8 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
         curr_sample_weight[not_indices] = 0
         oob_sample_weight[indices] = 0
 
-        program.raw_fitness_ = program.raw_fitness(X, y, curr_sample_weight)
+        program.raw_fitness_, y_pred = program.raw_fitness(X, y, curr_sample_weight, return_ypred=True)
+        program.complexity_ = program.calc_complexity(X, y_pred)
         if max_samples < n_samples:
             # Calculate OOB fitness
             program.oob_fitness_ = program.raw_fitness(X, y, oob_sample_weight)
@@ -179,7 +229,11 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                  warm_start=False,
                  n_jobs=1,
                  verbose=0,
-                 random_state=None):
+                 random_state=None,
+                 first_tournament="fitness",
+                 second_tournament=None,
+                 second_tournament_size=None,
+                 ):
 
         self.population_size = population_size
         self.hall_of_fame = hall_of_fame
@@ -203,13 +257,18 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
         self.n_jobs = n_jobs
         self.verbose = verbose
         self.random_state = random_state
+        self.first_tournament = first_tournament
+        self.second_tournament = second_tournament
+        self.second_tournament_size = second_tournament_size
 
     def _verbose_reporter(self,
                           start_time=None,
                           gen=None,
                           population=None,
                           fitness=None,
-                          length=None):
+                          complexity=None,
+                          length=None
+                          ):
         """A report of the progress of the evolution process.
 
         Parameters
@@ -231,12 +290,12 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
 
         """
         if start_time is None:
-            print('%4s|%-25s|%-42s|' % (' ', 'Population Average'.center(25),
-                                        'Best Individual'.center(42)))
-            print('-' * 4 + ' ' + '-' * 25 + ' ' + '-' * 42 + ' ' + '-' * 10)
+            print('%4s|%-25s|%-105s|' % (' ', 'Population Average'.center(25),
+                                        'Best Individual'.center(103)))
+            print('-' * 4 + ' ' + '-' * 25 + ' ' + '-' * (58 + 47) + ' ' + '-' * 10)
             header_fields = ('Gen', 'Length', 'Fitness', 'Length', 'Fitness',
-                             'OOB Fitness', 'Time Left')
-            print('%4s %8s %16s %8s %16s %16s %10s' % header_fields)
+                             'OOB Fitness', 'Complexity', 'Program', 'Time Left')
+            print('%4s %8s %16s %8s %16s %16s %16s %45s %10s' % header_fields)
 
         else:
             # Estimate remaining time for run
@@ -248,23 +307,38 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                 remaining_time = '{0:.2f}s'.format(remaining_time)
 
             # Find the current generation's best individual
-            if self._metric.greater_is_better:
-                best_program = population[np.argmax(fitness)]
+            if self.first_tournament == "complexity":
+                best_program = population[np.argmin(complexity)]
             else:
-                best_program = population[np.argmin(fitness)]
+                if self._metric.greater_is_better:
+                    best_program = population[np.argmax(fitness)]
+                else:
+                    best_program = population[np.argmin(fitness)]
 
             oob_fitness = 'N/A'
             if self.max_samples < 1.0:
                 oob_fitness = best_program.oob_fitness_
 
-            print('%4s %8s %16s %8s %16s %16s %10s' %
+
+            complexity = best_program.complexity_
+
+            best_program_str = str(best_program)
+            if len(best_program_str) > 45:
+                best_program_str = "str too long - check pdf-file"
+
+            print('%4s %8s %16s %8s %16s %16s %16s %45s %10s' %
                   (gen,
                    np.round(np.mean(length), 2),
                    np.mean(fitness),
                    best_program.length_,
                    best_program.raw_fitness_,
                    oob_fitness,
+                   complexity,
+                   best_program_str,
                    remaining_time))
+            graph = pydotplus.graphviz.graph_from_dot_data(best_program.export_graphviz())
+            filename = "best_program_gen_" + str(gen) + ".pdf"
+            graph.write_pdf(filename)
 
     def fit(self, X, y, sample_weight=None):
         """Fit the Genetic Program according to X, y.
@@ -402,7 +476,8 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
 
         if self.verbose:
             # Print header fields
-            self._verbose_reporter()
+            self._verbose_reporter(
+            )
             start_time = time()
 
         for gen in range(prior_generations, self.generations):
@@ -432,6 +507,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
             population = list(itertools.chain.from_iterable(population))
 
             fitness = [program.raw_fitness_ for program in population]
+            complexity = [program.complexity_ for program in population]
             length = [program.length_ for program in population]
 
             parsimony_coefficient = None
@@ -457,7 +533,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                         self._programs[old_gen - 1][idx] = None
 
             if self.verbose:
-                self._verbose_reporter(start_time, gen, population, fitness,
+                self._verbose_reporter(start_time, gen, population, fitness, complexity,
                                        length)
 
             # Check for early stopping
@@ -696,7 +772,10 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
                  warm_start=False,
                  n_jobs=1,
                  verbose=0,
-                 random_state=None):
+                 random_state=None,
+                 first_tournament="fitness",
+                 second_tournament=None,
+                 second_tournament_size = None):
         super(SymbolicRegressor, self).__init__(
             population_size=population_size,
             generations=generations,
@@ -717,7 +796,10 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
             warm_start=warm_start,
             n_jobs=n_jobs,
             verbose=verbose,
-            random_state=random_state)
+            random_state=random_state,
+            first_tournament=first_tournament,
+            second_tournament=second_tournament,
+            second_tournament_size = second_tournament_size)
 
     def __str__(self):
         """Overloads `print` output of the object to resemble a LISP tree."""
