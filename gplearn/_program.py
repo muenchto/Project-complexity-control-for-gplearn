@@ -151,6 +151,7 @@ class _Program(object):
         self._max_samples = None
         self._indices_state = None
         self.complexity_ = None
+        self.y_pred = None
     def build_program(self, random_state):
         """Build a naive random program.
 
@@ -461,8 +462,10 @@ class _Program(object):
         penalty = parsimony_coefficient * len(self.program) * self.metric.sign
         return self.raw_fitness_ - penalty
 
-    def calc_complexity(self, X, y_pred):
-        return sum(complexity(X, y_pred))
+    def calc_complexity(self, X):
+        if self.complexity_ is None:
+            self.complexity_ = sum(complexity(X, self.y_pred))
+        return self.complexity_
 
     def get_subtree(self, random_state, program=None):
         """Get a random subtree from the program.

@@ -28,6 +28,8 @@ from .functions import _function_map, _Function
 from .utils import _partition_estimators
 from .utils import check_random_state, NotFittedError
 
+from .complexity import complexity as complexity_measure
+
 __all__ = ['SymbolicRegressor', 'SymbolicTransformer']
 
 MAX_INT = np.iinfo(np.int32).max
@@ -84,7 +86,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
 
         elif first_tournament == "fitness" and second_tournament == "complexity":
             contenders = [_tournament()[1] for _ in range(0, 2)]
-            complexity_p = [parents[p].complexity_ for p in contenders]
+            complexity_p = [parents[p].calc_complexity(X) for p in contenders]
             if random_state.random_sample() < second_tournament_size/2:
                 parent_index = contenders[np.argmin(complexity_p)]
             else:
@@ -186,8 +188,11 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
         curr_sample_weight[not_indices] = 0
         oob_sample_weight[indices] = 0
 
-        program.raw_fitness_, y_pred = program.raw_fitness(X, y, curr_sample_weight, return_ypred=True)
-        program.complexity_ = program.calc_complexity(X, y_pred)
+        program.raw_fitness_, program.y_pred = program.raw_fitness(X, y, curr_sample_weight, return_ypred=True)
+
+        #if first_tournament == "complexity" or second_tournament == "complexity":
+        #    program.complexity_ = program.calc_complexity(X)
+
         if max_samples < n_samples:
             # Calculate OOB fitness
             program.oob_fitness_ = program.raw_fitness(X, y, oob_sample_weight)
@@ -229,6 +234,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                  warm_start=False,
                  n_jobs=1,
                  verbose=0,
+                 safe_best_program_to_file=None,
                  random_state=None,
                  first_tournament="fitness",
                  second_tournament=None,
@@ -256,6 +262,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
         self.warm_start = warm_start
         self.n_jobs = n_jobs
         self.verbose = verbose
+        self.safe_best_program_to_file = safe_best_program_to_file,
         self.random_state = random_state
         self.first_tournament = first_tournament
         self.second_tournament = second_tournament
@@ -267,7 +274,8 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                           population=None,
                           fitness=None,
                           complexity=None,
-                          length=None
+                          length=None,
+                          data=None,
                           ):
         """A report of the progress of the evolution process.
 
@@ -319,8 +327,13 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
             if self.max_samples < 1.0:
                 oob_fitness = best_program.oob_fitness_
 
-
-            complexity = best_program.complexity_
+            complexity_out = "N/A"
+            if self.first_tournament == "complexity" or self.second_tournament == "complexity":
+                best_program.calc_complexity(data)
+                if best_program.complexity_ is not None:
+                    complexity_out = best_program.complexity_ / self.ground_complexity
+                else:
+                    complexity_out = "not available"
 
             best_program_str = str(best_program)
             if len(best_program_str) > 45:
@@ -333,12 +346,14 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                    best_program.length_,
                    best_program.raw_fitness_,
                    oob_fitness,
-                   complexity,
+                   complexity_out,
                    best_program_str,
                    remaining_time))
-            graph = pydotplus.graphviz.graph_from_dot_data(best_program.export_graphviz())
-            filename = "best_program_gen_" + str(gen) + ".pdf"
-            graph.write_pdf(filename)
+
+            if self.safe_best_program_to_file[0]:
+                graph = pydotplus.graphviz.graph_from_dot_data(best_program.export_graphviz())
+                filename = "best_program_gen_" + str(gen) + ".pdf"
+                graph.write_pdf(filename)
 
     def fit(self, X, y, sample_weight=None):
         """Fit the Genetic Program according to X, y.
@@ -452,6 +467,8 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
         params['arities'] = self._arities
         params['method_probs'] = self._method_probs
 
+        self.ground_complexity = sum(complexity_measure(X, y))
+
         if not self.warm_start or not hasattr(self, "_programs"):
             # Free allocated memory, if any
             self._programs = []
@@ -507,7 +524,12 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
             population = list(itertools.chain.from_iterable(population))
 
             fitness = [program.raw_fitness_ for program in population]
-            complexity = [program.complexity_ for program in population]
+
+            if self.first_tournament == "complexity" or self.second_tournament == "complexity":
+                complexity = [program.complexity_ for program in population]
+            else:
+                complexity = None
+
             length = [program.length_ for program in population]
 
             parsimony_coefficient = None
@@ -534,7 +556,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
 
             if self.verbose:
                 self._verbose_reporter(start_time, gen, population, fitness, complexity,
-                                       length)
+                                       length, data=X)
 
             # Check for early stopping
             if self._metric.greater_is_better:
@@ -772,10 +794,12 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
                  warm_start=False,
                  n_jobs=1,
                  verbose=0,
+                 safe_best_program_to_file=None,
                  random_state=None,
                  first_tournament="fitness",
                  second_tournament=None,
-                 second_tournament_size = None):
+                 second_tournament_size = None,
+                 ):
         super(SymbolicRegressor, self).__init__(
             population_size=population_size,
             generations=generations,
@@ -796,6 +820,7 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
             warm_start=warm_start,
             n_jobs=n_jobs,
             verbose=verbose,
+            safe_best_program_to_file=safe_best_program_to_file,
             random_state=random_state,
             first_tournament=first_tournament,
             second_tournament=second_tournament,
