@@ -35,7 +35,7 @@ __all__ = ['SymbolicRegressor', 'SymbolicTransformer']
 MAX_INT = np.iinfo(np.int32).max
 
 
-def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
+def _parallel_evolve(n_programs, parents, X, y, ground_complexity, sample_weight, seeds, params):
     """Private function used to build a batch of programs within a job."""
     n_samples, n_features = X.shape
     # Unpack parameters
@@ -72,7 +72,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
     def _complexity_tournament():
         """find the least complex individual from a sub-population"""
         contenders = random_state.randint(0, len(parents), tournament_size)
-        complexity_p = [parents[p].complexity_ for p in contenders]
+        complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
         parent_index = contenders[np.argmin(complexity_p)]
         return parents[parent_index], parent_index
 
@@ -86,7 +86,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
 
         elif first_tournament == "fitness" and second_tournament == "complexity":
             contenders = [_tournament()[1] for _ in range(0, 2)]
-            complexity_p = [parents[p].calc_complexity(X) for p in contenders]
+            complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
             if random_state.random_sample() < second_tournament_size/2:
                 parent_index = contenders[np.argmin(complexity_p)]
             else:
@@ -302,7 +302,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                                         'Best Individual'.center(103)))
             print('-' * 4 + ' ' + '-' * 25 + ' ' + '-' * (58 + 47) + ' ' + '-' * 10)
             header_fields = ('Gen', 'Length', 'Fitness', 'Length', 'Fitness',
-                             'OOB Fitness', 'Complexity', 'Program', 'Time Left')
+                             'OOB Fitness', 'Complexity(norm)', 'Program', 'Time Left')
             print('%4s %8s %16s %8s %16s %16s %16s %45s %10s' % header_fields)
 
         else:
@@ -515,6 +515,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
                                           parents,
                                           X,
                                           y,
+                                          self.ground_complexity,
                                           sample_weight,
                                           seeds[starts[i]:starts[i + 1]],
                                           params)
@@ -526,7 +527,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
             fitness = [program.raw_fitness_ for program in population]
 
             if self.first_tournament == "complexity" or self.second_tournament == "complexity":
-                complexity = [program.complexity_ for program in population]
+                complexity = [abs(program.calc_complexity(X) - self.ground_complexity) for program in population]
             else:
                 complexity = None
 

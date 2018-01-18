@@ -1,0 +1,19 @@
+Data: genereated data from gplearn example
+Input data size: (50, 2)
+Ground complexity: 8455.6819807
+Run GP with parameters:  {'const_range': (-1.0, 1.0), 'first_tournament': 'fitness', 'function_set': ('add', 'sub', 'mul', 'div'), 'generations': 100, 'init_depth': (2, 6), 'init_method': 'half and half', 'max_samples': 1.0, 'metric': 'mean absolute error', 'n_jobs': 1, 'p_crossover': 0.9, 'p_hoist_mutation': 0, 'p_point_mutation': 0, 'p_point_replace': 0.05, 'p_subtree_mutation': 0.1, 'parsimony_coefficient': 0.001, 'population_size': 1000, 'random_state': 0, 'safe_best_program_to_file': (True,), 'second_tournament': None, 'second_tournament_size': 2, 'stopping_criteria': 0.01, 'tournament_size': 20, 'verbose': 1, 'warm_start': False}
+    |    Population Average   |                                            Best Individual                                              |
+---- ------------------------- --------------------------------------------------------------------------------------------------------- ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness Complexity(norm)                                       Program  Time Left
+   0    38.53    372.649200635        3   0.365910886616              N/A              N/A                                sub(X1, 0.939)      1.09m
+   1    13.13    29.7530253239       13   0.323301391416              N/A              N/A                 str too long - check pdf-file      1.02m
+   2    10.11     1.3776247357       15   0.277608368958              N/A              N/A                 str too long - check pdf-file     57.75s
+   3     8.52     1.0770503171       15    0.26159577945              N/A              N/A                 str too long - check pdf-file     56.17s
+   4     8.09    1.08209633276       15   0.257121770003              N/A              N/A                 str too long - check pdf-file     54.06s
+   5    11.27    1.11365256127       15   0.257121770003              N/A              N/A                 str too long - check pdf-file     53.58s
+   6    11.92   0.952942751019       21   0.249913548343              N/A              N/A                 str too long - check pdf-file     52.54s
+   7    14.18   0.914589533501       17   0.154341981322              N/A              N/A                 str too long - check pdf-file     52.88s
+   8    16.04   0.864572921421       21   0.140603147048              N/A              N/A                 str too long - check pdf-file     52.45s
+   9    18.07   0.798837184515       19 0.00958034847782              N/A              N/A                 str too long - check pdf-file     52.51s
+test fitness: 0.00958034847782
+score (coefficient of determination R^2 of the prediction): 0.999843724583

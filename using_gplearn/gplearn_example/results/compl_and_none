@@ -1,0 +1,31 @@
+Data: genereated data from gplearn example
+Input data size: (50, 2)
+Ground complexity: 8455.6819807
+Run GP with parameters:  {'const_range': (-1.0, 1.0), 'first_tournament': 'complexity', 'function_set': ('add', 'sub', 'mul', 'div'), 'generations': 100, 'init_depth': (2, 6), 'init_method': 'half and half', 'max_samples': 1.0, 'metric': 'mean absolute error', 'n_jobs': 1, 'p_crossover': 0.9, 'p_hoist_mutation': 0, 'p_point_mutation': 0, 'p_point_replace': 0.05, 'p_subtree_mutation': 0.1, 'parsimony_coefficient': 0.001, 'population_size': 1000, 'random_state': 0, 'safe_best_program_to_file': (True,), 'second_tournament': None, 'second_tournament_size': 1.4, 'stopping_criteria': 0.01, 'tournament_size': 20, 'verbose': 1, 'warm_start': False}
+    |    Population Average   |                                            Best Individual                                              |
+---- ------------------------- --------------------------------------------------------------------------------------------------------- ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness Complexity(norm)                                       Program  Time Left
+   0    38.53    372.649200635        7    1.21290391706              N/A   0.996839716647             mul(sub(X1, X0), sub(-0.611, X1))      1.32m
+   1    19.07     3.4109793933       53   0.796883722481              N/A   0.999475303583                 str too long - check pdf-file      1.31m
+   2    19.83     1.8767262695       61   0.796883722481              N/A   0.999475303583                 str too long - check pdf-file      1.38m
+   3    23.76    1.88366836973       61   0.796883722481              N/A   0.999475303583                 str too long - check pdf-file      1.45m
+   4    33.97    1.61565514574       53   0.520881564483              N/A   0.999475303583                 str too long - check pdf-file      1.52m
+   5    53.94    1.63972246724       25    1.19301807995              N/A    1.00029033904                 str too long - check pdf-file      1.60m
+   6    70.93    1.40792206596       83   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      1.64m
+   7    82.66    1.16636061684       79   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      1.77m
+   8    96.79    1.31340678062      137   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      1.87m
+   9   100.05     1.2591324611       85   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      1.99m
+  10    100.1    1.51880781783       79   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      2.05m
+  11   111.61    1.20097304851      119   0.796833653296              N/A    0.99997900478                 str too long - check pdf-file      2.10m
+  12   125.98    1.18848707258      169   0.751524849698              N/A   0.999989963391                 str too long - check pdf-file      2.18m
+  13   139.77    3.44875216983      169   0.751524849698              N/A   0.999989963391                 str too long - check pdf-file      2.28m
+  14   158.35    0.99579431365      171   0.751524849698              N/A   0.999989963391                 str too long - check pdf-file      2.39m
+  15   183.39   0.906111006745      159   0.751524849698              N/A   0.999989963391                 str too long - check pdf-file      2.49m
+  16   188.25   0.918303208628      197    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.58m
+  17   197.08    3.82850598718      131    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.67m
+  18   204.16    1.04255354425      239    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.72m
+  19   194.47    1.32389133681      179    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.80m
+  20   208.44    1.28393047828      227    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.84m
+  21   216.04    1.31792040274      183    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.90m
+  22    228.2    1.22116791587      433    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      2.94m
+  23   237.71    1.19930254398      139    1.06868387793              N/A   0.999989963391                 str too long - check pdf-file      3.08m

@@ -1,40 +1,36 @@
 #%pylab inline
 import pydotplus
 from sklearn.utils.random import check_random_state
-from sklearn.datasets import load_boston
+from sklearn.datasets import load_diabetes
 from gplearn.genetic import SymbolicRegressor
 import numpy as np
 from sklearn.model_selection import train_test_split
 from gplearn.complexity import complexity
 
 
-rng = check_random_state(0)
+rng = check_random_state(2)
 
 
-#(X_train, y_train) = load_boston(return_X_y=True)
-data = np.loadtxt("bioavailability.csv", delimiter=",")
-print("Data:", "bioavailability.csv")
-print("Input data size:", data.shape)
-X_data = data[:, :data.shape[1]-1]
-y_data = data[:, data.shape[1]-1]
-
-ground_compl = complexity(X_data, y_data)
+(X, y) = load_diabetes(return_X_y=True)
+print("diabtes dataset")
+print("size:", X.shape)
+ground_compl = complexity(X, y)
 print("Ground complexity:", sum(ground_compl))
 
-X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.30, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.70, random_state=42)
 
 ground_compl = complexity(X_train, y_train)
 print("Ground complexity on training data:", sum(ground_compl))
 
-est_gp = SymbolicRegressor(population_size=500,
+est_gp = SymbolicRegressor(population_size=600,
                            generations=500, stopping_criteria=0.01,
-                           p_crossover=0.9, p_subtree_mutation=0.1,
+                           p_crossover=0.8, p_subtree_mutation=0.1,
                            p_hoist_mutation=0, p_point_mutation=0,
                            parsimony_coefficient=0,
                             verbose=1,
                             random_state=42,
                            n_jobs=2,
-                           safe_best_program_to_file=True,
+                           safe_best_program_to_file=False,
                            tournament_size=10,
                            first_tournament="fitness",
                            second_tournament="complexity",
