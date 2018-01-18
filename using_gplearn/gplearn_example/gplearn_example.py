@@ -33,10 +33,10 @@ est_gp = SymbolicRegressor(population_size=1000,
                             verbose=1,
                            safe_best_program_to_file=True,
                             random_state=0,
-                           tournament_size=20,
-                           first_tournament="complexity",
-                           second_tournament="fitness",
-                           second_tournament_size=2)
+                           tournament_size=10,
+                           first_tournament="fitness",
+                           second_tournament="complexity",
+                           second_tournament_size=1)
 print("Run GP with parameters: ", est_gp.get_params())
 est_gp.fit(X_train, y_train)
 
