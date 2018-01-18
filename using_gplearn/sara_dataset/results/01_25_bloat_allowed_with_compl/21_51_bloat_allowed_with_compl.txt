@@ -1,0 +1,20 @@
+Data: bioavailability.csv
+Input data size: (359, 242)
+Ground complexity: 151876620329.0
+Ground complexity on training data: 108871574822.0
+Run GP with parameters:  {'const_range': (-1.0, 1.0), 'first_tournament': 'fitness', 'function_set': ('add', 'sub', 'mul', 'div'), 'generations': 500, 'init_depth': (2, 6), 'init_method': 'half and half', 'max_samples': 1.0, 'metric': 'mean absolute error', 'n_jobs': 2, 'p_crossover': 0.9, 'p_hoist_mutation': 0, 'p_point_mutation': 0, 'p_point_replace': 0.05, 'p_subtree_mutation': 0.1, 'parsimony_coefficient': 0, 'population_size': 500, 'random_state': 42, 'safe_best_program_to_file': (True,), 'second_tournament': 'complexity', 'second_tournament_size': 1.4, 'stopping_criteria': 0.01, 'tournament_size': 10, 'verbose': 1, 'warm_start': False}
+    |    Population Average   |                                            Best Individual                                              |
+---- ------------------------- --------------------------------------------------------------------------------------------------------- ----------
+ Gen   Length          Fitness   Length          Fitness      OOB Fitness       Complexity                                       Program  Time Left
+   0    21.67    849880.351241        3    41.1397377689              N/A   0.435856967319                               sub(X229, X105)      2.06m
+   1    18.94    71.5569113554       17    37.1079739616              N/A   0.298097117327                 str too long - check pdf-file    228.39m
+   2    28.08    141.489400537       13    26.5766772081              N/A   0.416791184578                 str too long - check pdf-file    309.81m
+   3    16.12    89.8928425188        7    28.3277954343              N/A   0.414989664218             sub(div(add(X69, X0), X224), X44)    377.45m
+   4    14.07    61.0259176417       11    28.1087532965              N/A   0.410503311031                 str too long - check pdf-file    401.55m
+   5    17.25    68.2713277163       15     27.591707774              N/A   0.310819729552                 str too long - check pdf-file    430.57m
+   6    22.53    61.8964613767       11    25.9827380603              N/A   0.397689000801                 str too long - check pdf-file    436.46m
+   7     21.9    104.605479357       27    25.9541110347              N/A   0.397339360575                 str too long - check pdf-file    441.46m
+   8    18.86    104.102178199       25     25.950126971              N/A   0.397119609893                 str too long - check pdf-file    443.71m
+   9    18.22    78.3579182211       65    25.8769940376              N/A   0.397327945435                 str too long - check pdf-file    452.65m
+  10    24.43    276.309214579       43    25.6045186269              N/A   0.400360237511                 str too long - check pdf-file    459.22m
+  11     32.8    63.6118658914       43    25.6045186269              N/A   0.400360237511                 str too long - check pdf-file    463.42m
