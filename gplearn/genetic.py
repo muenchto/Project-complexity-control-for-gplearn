@@ -526,7 +526,7 @@ class BaseSymbolic(six.with_metaclass(ABCMeta, BaseEstimator)):
 
             fitness = [program.raw_fitness_ for program in population]
 
-            if self.first_tournament == "complexity" or self.second_tournament == "complexity":
+            if self.first_tournament == "complexity":
                 complexity = [abs(program.calc_complexity(X) - self.ground_complexity) for program in population]
             else:
                 complexity = None
