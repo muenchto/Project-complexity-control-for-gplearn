@@ -72,7 +72,8 @@ def _parallel_evolve(n_programs, parents, X, y, ground_complexity, sample_weight
     def _complexity_tournament():
         """find the least complex individual from a sub-population"""
         contenders = random_state.randint(0, len(parents), tournament_size)
-        complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
+        #complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
+        complexity_p = [parents[p].calc_complexity(X) for p in contenders]
         parent_index = contenders[np.argmin(complexity_p)]
         return parents[parent_index], parent_index
 
@@ -86,7 +87,8 @@ def _parallel_evolve(n_programs, parents, X, y, ground_complexity, sample_weight
 
         elif first_tournament == "fitness" and second_tournament == "complexity":
             contenders = [_tournament()[1] for _ in range(0, 2)]
-            complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
+            #complexity_p = [abs(parents[p].calc_complexity(X) - ground_complexity) for p in contenders]
+            complexity_p = [parents[p].calc_complexity(X) for p in contenders]
             if random_state.random_sample() < second_tournament_size/2:
                 parent_index = contenders[np.argmin(complexity_p)]
             else:

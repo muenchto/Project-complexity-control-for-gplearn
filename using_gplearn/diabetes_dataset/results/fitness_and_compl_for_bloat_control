@@ -2,70 +2,49 @@ diabtes dataset
 size: (442, 10)
 Ground complexity: 159643346.126
 Ground complexity on training data: 54617983.063
-Run GP with parameters:  {'const_range': (-1.0, 1.0), 'first_tournament': 'fitness', 'function_set': ('add', 'sub', 'mul', 'div'), 'generations': 500, 'init_depth': (2, 6), 'init_method': 'half and half', 'max_samples': 1.0, 'metric': 'mean absolute error', 'n_jobs': 2, 'p_crossover': 0.8, 'p_hoist_mutation': 0, 'p_point_mutation': 0, 'p_point_replace': 0.05, 'p_subtree_mutation': 0.1, 'parsimony_coefficient': 0, 'population_size': 600, 'random_state': 42, 'safe_best_program_to_file': (False,), 'second_tournament': 'complexity', 'second_tournament_size': 1.4, 'stopping_criteria': 0.01, 'tournament_size': 10, 'verbose': 1, 'warm_start': False}
+Run GP with parameters:  {'const_range': (-1.0, 1.0), 'first_tournament': 'fitness', 'function_set': ('add', 'sub', 'mul', 'div'), 'generations': 40, 'init_depth': (2, 6), 'init_method': 'half and half', 'max_samples': 1.0, 'metric': 'mean absolute error', 'n_jobs': 2, 'p_crossover': 0.8, 'p_hoist_mutation': 0, 'p_point_mutation': 0, 'p_point_replace': 0.05, 'p_subtree_mutation': 0.1, 'parsimony_coefficient': 0, 'population_size': 600, 'random_state': 42, 'safe_best_program_to_file': (False,), 'second_tournament': 'complexity', 'second_tournament_size': 1.4, 'stopping_criteria': 0.01, 'tournament_size': 10, 'verbose': 1, 'warm_start': False}
     |    Population Average   |                                            Best Individual                                              |
 ---- ------------------------- --------------------------------------------------------------------------------------------------------- ----------
  Gen   Length          Fitness   Length          Fitness      OOB Fitness Complexity(norm)                                       Program  Time Left
-   0    23.63     3306125.7874       31    136.981386113              N/A   0.224064327197                 str too long - check pdf-file    120.54m
-   1    28.85    168.816372435       19    136.417847158              N/A   0.243602939521                 str too long - check pdf-file    124.63m
-   2    38.61    181.650946101       53    129.642768829              N/A   0.298100298673                 str too long - check pdf-file    123.69m
-   3    32.94    174.804531521      103    118.622998566              N/A   0.569781838928                 str too long - check pdf-file    123.28m
-   4    44.02    179.406929944      103    115.214861695              N/A   0.769128756994                 str too long - check pdf-file    122.64m
-   5    63.96    256.180934035      165    105.685670596              N/A    1.21357761732                 str too long - check pdf-file    122.37m
-   6    96.53    283.351017935      125    95.2975186409              N/A    1.11363256898                 str too long - check pdf-file    122.17m
-   7   123.45    220.456886744      129    88.5393853536              N/A    1.28715613399                 str too long - check pdf-file    121.90m
-   8   157.76    230.181799054      279    83.6571494414              N/A    1.29788579941                 str too long - check pdf-file    121.90m
-   9   168.83    822.428243649      235    82.7251317852              N/A    1.28313189519                 str too long - check pdf-file    121.88m
-  10   186.32    210.379471976      233    75.5853373388              N/A    1.20518509596                 str too long - check pdf-file    121.87m
-  11   221.54    266.160897263      229    72.3839590188              N/A     1.0240060397                 str too long - check pdf-file    121.81m
-  12   223.19    326.055066322      233    72.3520887721              N/A    1.02225802276                 str too long - check pdf-file    121.77m
-  13   226.71    221.613972769      253    69.7612335292              N/A    1.19015267908                 str too long - check pdf-file    121.75m
-  14   228.88    260.280759529      201     64.839257087              N/A   0.941442549363                 str too long - check pdf-file    121.70m
-  15   213.51    390.777736437      265    63.8145044927              N/A    0.95553703122                 str too long - check pdf-file    121.54m
-  16   215.48    128.713711308      203    61.7984411676              N/A   0.870588619802                 str too long - check pdf-file    121.38m
-  17   227.34     446.34834439      197    61.2439702355              N/A   0.866452791107                 str too long - check pdf-file    121.49m
-  18   237.85    132.766265187      229     59.791101036              N/A    0.85286237973                 str too long - check pdf-file    121.37m
-  19   245.49    123.212415379      277    58.1353811162              N/A   0.884278401656                 str too long - check pdf-file    121.22m
-  20   258.14    119.436516836      277    57.3323846651              N/A   0.878120490982                 str too long - check pdf-file    121.39m
-  21   257.88     236.89498047      207    56.7269661907              N/A   0.838509277834                 str too long - check pdf-file    121.30m
-  22   256.75    285.019724975      287    55.5818039546              N/A   0.836550251189                 str too long - check pdf-file    121.17m
-  23   271.58    931.372679392      287    55.2022534473              N/A   0.844056014606                 str too long - check pdf-file    121.12m
-  24   284.97    152.980604154      287    54.5731957711              N/A   0.845831328707                 str too long - check pdf-file    121.03m
-  25   277.76    155.544581288      325    53.8984544076              N/A   0.847998023182                 str too long - check pdf-file    120.95m
-  26   292.39    299.595977136      287    53.3174412021              N/A   0.806569342871                 str too long - check pdf-file    120.79m
-  27   311.75    134.804122849      365    52.7869476141              N/A   0.867622802159                 str too long - check pdf-file    120.59m
-  28   335.82    479.475324541      319    52.1391507956              N/A   0.830564156105                 str too long - check pdf-file    120.49m
-  29   347.26    450.526605843      329     52.132436899              N/A   0.857551981765                 str too long - check pdf-file    120.35m
-  30   366.26    106.335174276      613    51.3141904181              N/A   0.841914711127                 str too long - check pdf-file    120.21m
-  31   380.52    224.035916659      371    50.6304822713              N/A   0.809923472544                 str too long - check pdf-file    120.22m
-  32   398.47    567.763028753      371    50.3877845212              N/A   0.817650839458                 str too long - check pdf-file    120.09m
-  33   510.45    63.7702670781      713    50.3197003742              N/A   0.886387792766                 str too long - check pdf-file    120.01m
-  34   599.59    90.5346153763      427    50.1273365438              N/A   0.819760092221                 str too long - check pdf-file    120.06m
-  35   526.41    324.552544288      711    49.8389330187              N/A   0.855089209923                 str too long - check pdf-file    120.01m
-  36   599.49    80.0804708849      739    48.8921628685              N/A   0.873143659184                 str too long - check pdf-file    120.00m
-  37   678.09    244.630380548      739    48.8453273939              N/A   0.874361889547                 str too long - check pdf-file    120.04m
-  38   912.31    69.7582769413     1257    48.6595863628              N/A   0.918498543261                 str too long - check pdf-file    120.30m
-  39  1024.52     62.566245868      847    48.2415954603              N/A   0.878005239533                 str too long - check pdf-file    120.76m
-  40   901.97    63.9859924965      847    48.2045777812              N/A   0.876795137644                 str too long - check pdf-file    121.06m
-  41  1194.29    191.699700517     1135     48.028088975              N/A   0.893201202613                 str too long - check pdf-file    121.46m
-  42  1248.06    86.8902888874      849    47.9012185599              N/A   0.862483839912                 str too long - check pdf-file    121.91m
-  43  1207.22    228.473815033      851    47.6108556707              N/A   0.867662661714                 str too long - check pdf-file    122.29m
-  44  1164.18    229.779013995     1135    47.4689079898              N/A   0.897907389501                 str too long - check pdf-file    122.61m
-  45  1094.71    80.8420313571     1105    47.1493834832              N/A   0.906760208851                 str too long - check pdf-file    122.89m
-  46  1155.37    366.296029488     1101    47.0901557034              N/A   0.903866015043                 str too long - check pdf-file    123.12m
-  47  1136.64    144.626017626     1117    46.6657554966              N/A   0.894374046382                 str too long - check pdf-file    123.34m
-  48  1110.15    68.3096425989     1101    46.6213997808              N/A   0.894239064787                 str too long - check pdf-file    123.46m
-  49   1127.0    69.0676095708     1115     46.306767619              N/A   0.882730381134                 str too long - check pdf-file    123.59m
-  50  1209.56      192.6599671     1115    46.2980045545              N/A   0.882804477317                 str too long - check pdf-file    123.76m
-  51  1384.94    70.3280759438     1113    46.2531817947              N/A   0.881340749197                 str too long - check pdf-file    124.02m
-  52  1236.39    135.623268808     1119    46.0588690034              N/A   0.885498169575                 str too long - check pdf-file    124.23m
-  53  1183.63    95.6899472153     1099    46.0087226169              N/A    0.88135109425                 str too long - check pdf-file    124.36m
-  54  1169.56    67.1845982691     1115    45.7698188839              N/A   0.876581189796                 str too long - check pdf-file    124.46m
-  55  1176.15    66.2166476899     1133    45.1954760008              N/A    0.89620605302                 str too long - check pdf-file    124.55m
-  56  1150.97    161.590731313     1127    45.0579219564              N/A   0.893209213106                 str too long - check pdf-file    124.58m
-  57  1138.83    182.023933985     1127    44.9417309019              N/A   0.892859046242                 str too long - check pdf-file    124.59m
-  58  1128.76    177.257964564     1127    44.8118636843              N/A   0.896027525171                 str too long - check pdf-file    124.62m
-  59  1142.54    504.879108076     1167    44.6728721559              N/A    0.88703577002                 str too long - check pdf-file    124.55m
-  60  1183.37    152.533513379     1167    44.6728721559              N/A    0.88703577002                 str too long - check pdf-file    124.53m
-  61  1189.03    76.2551565825     1165    44.4051186699              N/A   0.916787092458                 str too long - check pdf-file    124.49m
-  62  1142.88     52.077514311     1179    44.3701046811              N/A   0.915986242148                 str too long - check pdf-file    124.44m
+   0    23.63     3306125.7874       31    136.981386113              N/A   0.224064327197                 str too long - check pdf-file     14.03s
+   1    26.16    157.645658491       33    136.017026909              N/A   0.202599362457                 str too long - check pdf-file      1.60m
+   2    39.11    235.339651769       39    135.318576025              N/A   0.291358984732                 str too long - check pdf-file      2.03m
+   3    41.22    192.739626056       33    125.713720505              N/A    1.01924558416                 str too long - check pdf-file      2.20m
+   4     35.3    266.897272594       59    124.339422795              N/A    1.21291057022                 str too long - check pdf-file      2.27m
+   5    37.83    294.190937747       63     117.41800663              N/A    1.07345458435                 str too long - check pdf-file      2.55m
+   6    47.38    190.626214593       77    110.497395971              N/A   0.682714721446                 str too long - check pdf-file      2.49m
+   7    54.25    250.378022473      123    102.592124862              N/A   0.647114411217                 str too long - check pdf-file      2.44m
+   8     67.1    331.679346238      135    97.0753486221              N/A    1.25031996331                 str too long - check pdf-file      2.38m
+   9    88.26    408.487606877       71    80.6806550693              N/A   0.468033327362                 str too long - check pdf-file      2.32m
+  10   106.54    275.868544169      125    77.7929827339              N/A   0.491921027177                 str too long - check pdf-file      2.27m
+  11   101.23    274.477664095      113    70.7223051212              N/A   0.244023416796                 str too long - check pdf-file      2.21m
+  12    96.59    101.617520814       77    67.5229826395              N/A    0.50187985155                 str too long - check pdf-file      2.15m
+  13    109.0    107.049021413       67        65.542935              N/A    0.56855218062                 str too long - check pdf-file      2.14m
+  14   123.15    103.866497921       99    59.7321149579              N/A   0.620677412453                 str too long - check pdf-file      2.10m
+  15   123.81    97.5732713451      159    58.5224582036              N/A   0.491175760725                 str too long - check pdf-file      2.05m
+  16   122.56    86.8030837354      143    57.5232825278              N/A   0.447262201242                 str too long - check pdf-file      1.97m
+  17    135.4    84.3703140691      169    56.4169568249              N/A   0.362712564517                 str too long - check pdf-file      1.93m
+  18   140.67    120.401595837      183    56.0848502075              N/A   0.486393997549                 str too long - check pdf-file      1.85m
+  19   147.35    112.917892686      159    55.3093145976              N/A   0.438875033139                 str too long - check pdf-file      1.76m
+  20    166.4    82.0930466649      283    54.6000589799              N/A   0.544781448198                 str too long - check pdf-file      1.67m
+  21   185.14    79.9146057695      275    52.5510350298              N/A   0.604488874591                 str too long - check pdf-file      1.59m
+  22   189.77     73.857167487      173    51.6107999624              N/A   0.529486093159                 str too long - check pdf-file      1.51m
+  23   208.84    86.0900040123      179    51.5304342147              N/A   0.529192061427                 str too long - check pdf-file      1.42m
+  24   238.61    95.9242299163      273    51.5071462125              N/A   0.516561931383                 str too long - check pdf-file      1.34m
+  25   254.68    77.8419061531      303    51.1610653598              N/A   0.503998030754                 str too long - check pdf-file      1.27m
+  26   227.29     150.16800458      265    50.9215881111              N/A   0.528949886151                 str too long - check pdf-file      1.18m
+  27   252.04    84.0023626958      291    49.3468233057              N/A   0.647609841725                 str too long - check pdf-file      1.10m
+  28   275.47    127.876252629      297    49.0852005925              N/A   0.635465403266                 str too long - check pdf-file      1.03m
+  29   306.01    594.615187564      293    49.1086662253              N/A   0.634670135437                 str too long - check pdf-file     57.04s
+  30   330.32    113.483000926      303    48.7490641887              N/A   0.621007747486                 str too long - check pdf-file     51.82s
+  31   315.77    83.4209487465      309    48.0975605263              N/A   0.761497357874                 str too long - check pdf-file     46.62s
+  32   296.79     64.729309939      491    47.6271737955              N/A   0.872252556063                 str too long - check pdf-file     41.35s
+  33   315.47     75.725625804      341    47.1771363036              N/A   0.751751881781                 str too long - check pdf-file     35.67s
+  34   334.72    104.106667671      291    46.9623262181              N/A   0.740498294913                 str too long - check pdf-file     29.88s
+  35   348.49    82.5320931508      363    46.5510506981              N/A   0.793526337774                 str too long - check pdf-file     23.98s
+  36   368.28    62.2661230444      393    46.2316077794              N/A   0.727932569015                 str too long - check pdf-file     18.05s
+  37   336.92    108.366022022      381    45.8770014672              N/A   0.794456043641                 str too long - check pdf-file     12.08s
+  38   347.58    68.9781637037      501    45.7820657677              N/A   0.727812680723                 str too long - check pdf-file      6.11s
+  39   375.74     90.536303961      441    44.7953072359              N/A   0.760340280315                 str too long - check pdf-file      0.00s
+test fitness: 60.5110913515
+-0.223575549455
