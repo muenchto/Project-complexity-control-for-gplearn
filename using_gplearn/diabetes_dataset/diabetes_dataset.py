@@ -23,7 +23,7 @@ ground_compl = complexity(X_train, y_train)
 print("Ground complexity on training data:", sum(ground_compl))
 
 est_gp = SymbolicRegressor(population_size=600,
-                           generations=40, stopping_criteria=0.01,
+                           generations=100, stopping_criteria=0.01,
                            p_crossover=0.8, p_subtree_mutation=0.1,
                            p_hoist_mutation=0, p_point_mutation=0,
                            parsimony_coefficient=0,
@@ -33,7 +33,7 @@ est_gp = SymbolicRegressor(population_size=600,
                            safe_best_program_to_file=False,
                            tournament_size=10,
                            first_tournament="fitness",
-                           second_tournament="complexity",
+                           #second_tournament="complexity",
                            second_tournament_size=1.4)
 print("Run GP with parameters: ", est_gp.get_params())
 est_gp.fit(X_train, y_train)
